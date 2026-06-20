@@ -9,7 +9,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['resolve'])
+const emit = defineEmits(['resolve', 'trace'])
 
 const sortedAlerts = computed(() => {
   return [...props.alerts].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -70,6 +70,10 @@ const handleQuickResolve = async (alert) => {
     }
   }
 }
+
+const handleTrace = (alert) => {
+  emit('trace', alert)
+}
 </script>
 
 <template>
@@ -107,12 +111,23 @@ const handleQuickResolve = async (alert) => {
               <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
               <span class="text-xs font-medium text-red-400">{{ getAlertLevelText(alert.alert_level) }}</span>
             </div>
-            <button
-              class="text-xs text-green-400 hover:text-green-300 transition-colors"
-              @click="handleQuickResolve(alert)"
-            >
-              标记处理
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                class="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+                @click.stop="handleTrace(alert)"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                追溯报告
+              </button>
+              <button
+                class="text-xs text-green-400 hover:text-green-300 transition-colors"
+                @click.stop="handleQuickResolve(alert)"
+              >
+                标记处理
+              </button>
+            </div>
           </div>
           <p class="text-white text-sm font-medium mb-2">{{ alert.product_name || '未知品类' }}</p>
           <p class="text-slate-300 text-xs line-clamp-2">{{ alert.message }}</p>

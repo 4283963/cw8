@@ -37,4 +37,16 @@ export const resolveAlert = (id, note) => {
   return api.patch(`/alerts/${id}/resolve`, { note })
 }
 
+export const getTraceabilityTimeline = (shipmentId, params = {}) => {
+  return api.get(`/traceability/timeline/${shipmentId}`, { params })
+}
+
+export const downloadTraceabilityReport = (shipmentId, params = {}) => {
+  return api.get(`/traceability/report/${shipmentId}`, {
+    params,
+    responseType: 'blob',
+    timeout: 30000,
+  })
+}
+
 export default api

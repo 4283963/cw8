@@ -9,15 +9,16 @@
     "init-db": "node src/db/init.js"
   },
   "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "dotenv": "^16.3.1",
     "koa": "^2.14.2",
-    "koa-router": "^12.0.0",
     "koa-bodyparser": "^4.4.1",
     "koa-cors": "^0.0.16",
-    "@koa/cors": "^4.0.0",
+    "koa-router": "^12.0.0",
+    "pdfkit": "^0.19.1",
     "pg": "^8.11.3",
-    "dotenv": "^16.3.1",
-    "ws": "^8.14.2",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

@@ -12,7 +12,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(['click', 'trace'])
 
 const isOverTemp = computed(() => {
   if (!props.temperatureData) return false
@@ -56,6 +56,10 @@ const formatTime = (timeStr) => {
 
 const handleClick = () => {
   emit('click')
+}
+
+const handleTrace = () => {
+  emit('trace')
 }
 </script>
 
@@ -136,6 +140,17 @@ const handleClick = () => {
         </svg>
         <span>{{ shipment.destination }}</span>
       </div>
+
+      <button
+        v-if="isOverTemp"
+        class="w-full mt-3 py-1.5 bg-red-600/20 hover:bg-red-600/40 border border-red-500/40 text-red-300 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+        @click.stop="handleTrace"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        查看断链追溯报告
+      </button>
     </div>
   </div>
 </template>

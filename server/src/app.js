@@ -11,6 +11,7 @@ const { globalRateLimiter } = require('./middleware/rateLimiter');
 const temperatureRoutes = require('./routes/temperature');
 const shipmentRoutes = require('./routes/shipments');
 const alertRoutes = require('./routes/alerts');
+const traceabilityRoutes = require('./routes/traceability');
 
 const app = new Koa();
 const PORT = process.env.PORT || 3000;
@@ -45,6 +46,8 @@ app.use(shipmentRoutes.routes());
 app.use(shipmentRoutes.allowedMethods());
 app.use(alertRoutes.routes());
 app.use(alertRoutes.allowedMethods());
+app.use(traceabilityRoutes.routes());
+app.use(traceabilityRoutes.allowedMethods());
 
 app.use(async (ctx) => {
   if (ctx.path === '/api/health') {

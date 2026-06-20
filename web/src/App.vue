@@ -6,6 +6,7 @@ import VehicleCard from './components/VehicleCard.vue'
 import AlertModal from './components/AlertModal.vue'
 import AlertList from './components/AlertList.vue'
 import TemperatureChart from './components/TemperatureChart.vue'
+import TraceabilityTimeline from './components/TraceabilityTimeline.vue'
 import StatHeader from './components/StatHeader.vue'
 
 const { alerts, temperatures, isConnected } = useWebSocket()
@@ -16,6 +17,8 @@ const showAlertModal = ref(false)
 const latestAlert = ref(null)
 const selectedShipment = ref(null)
 const showChart = ref(false)
+const showTimeline = ref(false)
+const timelineShipment = ref(null)
 const currentTime = ref('')
 
 let timeTimer = null
@@ -76,6 +79,26 @@ const handleVehicleClick = (shipment) => {
 const closeChart = () => {
   showChart.value = false
   selectedShipment.value = null
+}
+
+const handleTraceFromAlert = (alert) => {
+  const shipment = shipments.value.find((s) => s.id === alert.shipment_id)
+  timelineShipment.value = shipment || {
+    id: alert.shipment_id,
+    vehicle_plate: alert.vehicle_plate,
+    product_name: alert.product_name,
+  }
+  showTimeline.value = true
+}
+
+const handleTraceFromVehicle = (shipment) => {
+  timelineShipment.value = shipment
+  showTimeline.value = true
+}
+
+const closeTimeline = () => {
+  showTimeline.value = false
+  timelineShipment.value = null
 }
 
 const handleNewAlert = (alert) => {
@@ -178,6 +201,7 @@ onUnmounted(() => {
                 :shipment="shipment"
                 :temperature-data="temperatures[shipment.id]"
                 @click="handleVehicleClick(shipment)"
+                @trace="handleTraceFromVehicle(shipment)"
               />
             </div>
           </div>
@@ -187,6 +211,7 @@ onUnmounted(() => {
           <AlertList
             :alerts="alerts"
             @resolve="onResolveAlert"
+            @trace="handleTraceFromAlert"
           />
         </div>
       </div>
@@ -202,6 +227,12 @@ onUnmounted(() => {
       v-if="showChart && selectedShipment"
       :shipment="selectedShipment"
       @close="closeChart"
+    />
+
+    <TraceabilityTimeline
+      v-if="showTimeline && timelineShipment"
+      :shipment="timelineShipment"
+      @close="closeTimeline"
     />
   </div>
 </template>
