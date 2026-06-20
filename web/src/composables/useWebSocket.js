@@ -12,7 +12,8 @@ export function useWebSocket() {
   const connect = () => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
     const host = window.location.hostname
-    const wsUrl = `${protocol}//${host}:3000`
+    const port = 3000
+    const wsUrl = `${protocol}//${host}:${port}`
 
     try {
       ws.value = new WebSocket(wsUrl)
@@ -63,9 +64,17 @@ export function useWebSocket() {
         }
         break
       case 'temperature':
-        console.log('收到温度数据:', data)
         if (data.shipment_id) {
           temperatures.value[data.shipment_id] = data
+        }
+        break
+      case 'temperature_batch':
+        if (Array.isArray(data)) {
+          data.forEach((item) => {
+            if (item.shipment_id) {
+              temperatures.value[item.shipment_id] = item
+            }
+          })
         }
         break
     }
